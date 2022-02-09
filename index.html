@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Таблица Студентов</title>
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <script defer src="./app.js"></script>
+</head>
+
+<body>
+  <div id="widget" class="container">
+    <h1 class="visually-hidden">Таблица студентов</h1>
+
+    <form class="form" id="student-form" novalidate >
+      <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" placeholder="Введите Имя...">
+      </div>
+      <div>
+        <label for="surname">Фамилия:</label>
+        <input type="text" id="surname" placeholder="Введите Фамилию...">
+      </div>
+      <div>
+        <label for="patronymic">Отчество:</label>
+        <input type="text" id="patronymic" placeholder="Введите Отчество...">
+      </div>
+      <div>
+        <label for="birth-date">Дата Рождения:</label>
+        <input type="date" id="birth-date" placeholder="Введите Дату Рождения...">
+      </div>
+      <div>
+        <label for="year-beginning-study">Год начала обучения:</label>
+        <input type="number" id="year-start-education" placeholder="Введите Год...">
+      </div>
+      <div>
+        <label for="faculty">Факультет:</label>
+        <select name="faculty" id="faculty">
+          <option hidden disabled selected value="default">- Выберете Факультет -</option>
+          <option value="Дизайн">Дизайн</option>
+          <option value="Программирование">Программирование</option>
+          <option value="Маркетинг">Маркетинг</option>
+          <option value="Продажи">Продажи</option>
+        </select>
+      </div>
+      <div>
+        <input type="submit" value="Отправить форму">
+      </div>
+      <hr id="end">
+    </form>
+
+
+    <section class="table-section">
+      <h3 class="table-section__title">Таблица со студентами</h3>
+      <div>
+        <label for="search-input">Поиск Студентов:</label>
+        <input type="text" id="search-input" placeholder="Поиск...">
+      </div>
+
+      <table class="table table-bordered table-primary">
+        <thead style="background-color: #36ade1;">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">ФИО студента</th>
+            <th scope="col">Факультет</th>
+            <th scope="col">Дата рождения и возраст</th>
+            <th scope="col">Годы обучения и курс</th>
+          </tr>
+        </thead>
+        <tbody id="student-table">
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+</body>
+</html>
