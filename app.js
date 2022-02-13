@@ -23,13 +23,27 @@ class Student {
 
     const years = ['год', 'года', 'лет'];
     const cases = [2, 0, 1, 1, 1, 2];
-    const ageEnding = years[ (ageNumber % 100 > 4 && ageNumber % 100 < 20) ? 2 : cases[(ageNumber % 10 < 5 ) ? ageNumber % 10 : 5 ] ];
+    const ageEnding = years[
+      (ageNumber % 100 > 4 && ageNumber % 100 < 20) ?
+      2 : cases[(ageNumber % 10 < 5 ) ?
+      ageNumber % 10 : 5 ]
+    ];
 
     return `${ageNumber} ${ageEnding}`;
   }
 
-  static getStudentCourse(startDate) {
+  static getStudentCourse(startYear) {
+    const now = new Date().toISOString().slice(0, 10).split('-');
+    const nowYear = Number(now[0]);
+    const nowMonth = Number(now[1]);
 
+    startYear = Number(startYear);
+    let course = nowYear - startYear;
+
+    if(nowMonth >= 9) course += 1;
+    if(course > 4) return 'Закончил';
+
+    return course;
   }
 }
 
@@ -73,7 +87,7 @@ class WidgetUI {
     const table = document.getElementById('student-table');
     const entry = document.createElement('tr');
     const age = Student.getStudentAge(student.birthDate);
-    // const course = Student.getStudentCourse(student.educationStartDate);
+    const course = Student.getStudentCourse(student.educationStartDate);
 
     student.birthDate = Student.birthDateFormat(student.birthDate);
 
@@ -84,7 +98,7 @@ class WidgetUI {
       </td>
       <td>${student.faculty}</td>
       <td>${student.birthDate} (${age})</td>
-      <td>${student.educationStartDate}-${Number(student.educationStartDate) + 4}</td>
+      <td>${student.educationStartDate}-${Number(student.educationStartDate) + 4} (${course} курс)</td>
     `;
 
     table.appendChild(entry);
@@ -198,12 +212,12 @@ document.getElementById('student-form').addEventListener('submit', (event) => {
         name = document.getElementById('name'),
         patronymic = document.getElementById('patronymic'),
         birthDate = document.getElementById('birth-date'),
-        yearStartEducation = document.getElementById('year-start-education'),
+        educationStartDate = document.getElementById('year-start-education'),
         faculty = document.getElementById('faculty');
 
   const student = new Student(
     surname.value, name.value, patronymic.value,
-    birthDate.value, yearStartEducation.value,
+    birthDate.value, educationStartDate.value,
     faculty.value
   );
 
