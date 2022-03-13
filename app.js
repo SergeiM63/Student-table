@@ -200,8 +200,29 @@ class Form {
 
 //Начало программы
 document.addEventListener('DOMContentLoaded', Storage.printStudents);
+
 Form.inputDateRange();
 Form.inputCourseNumberRange();
+
+const modalBtn = document.querySelector('.modal-btn');
+const modalOverlay = document.querySelector('.modal-overlay');
+const modalWindow = document.querySelectorAll('.modal');
+
+modalBtn.addEventListener('click', (event) => {
+  let path = event.currentTarget.getAttribute('data-path');
+
+	document.querySelector(`[data-target="${path}"]`).classList.add('modal--visible');
+	modalOverlay.classList.add('modal-overlay--visible');
+});
+
+modalOverlay.addEventListener('click', (event) => {
+	console.log(event.target);
+
+	if (event.target === modalOverlay) {
+		modalOverlay.classList.remove('modal-overlay--visible');
+    modalWindow.classList.remove('modal--visible');
+	}
+});
 
 document.getElementById('student-form').addEventListener('submit', (event) => {
   event.preventDefault();

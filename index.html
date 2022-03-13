@@ -13,49 +13,13 @@
 
 <body>
   <div id="widget" class="container">
-    <h1 class="visually-hidden">Таблица студентов</h1>
-
-    <form class="form" id="student-form" novalidate >
-      <div>
-        <label for="name">Имя:</label>
-        <input type="text" id="name" placeholder="Введите Имя...">
-      </div>
-      <div>
-        <label for="surname">Фамилия:</label>
-        <input type="text" id="surname" placeholder="Введите Фамилию...">
-      </div>
-      <div>
-        <label for="patronymic">Отчество:</label>
-        <input type="text" id="patronymic" placeholder="Введите Отчество...">
-      </div>
-      <div>
-        <label for="birth-date">Дата Рождения:</label>
-        <input type="date" id="birth-date" placeholder="Введите Дату Рождения...">
-      </div>
-      <div>
-        <label for="year-beginning-study">Год начала обучения:</label>
-        <input type="number" id="year-start-education" placeholder="Введите Год...">
-      </div>
-      <div>
-        <label for="faculty">Факультет:</label>
-        <select name="faculty" id="faculty">
-          <option hidden disabled selected value="default">- Выберете Факультет -</option>
-          <option value="Дизайн">Дизайн</option>
-          <option value="Программирование">Программирование</option>
-          <option value="Маркетинг">Маркетинг</option>
-          <option value="Продажи">Продажи</option>
-        </select>
-      </div>
-      <div>
-        <input type="submit" value="Отправить форму">
-      </div>
-      <hr id="end">
-    </form>
-
+    <h1 class="visually-hidden">Виджет таблица со студентами</h1>
 
     <section class="table-section">
-      <h3 class="table-section__title">Таблица со студентами</h3>
-      <div>
+      <h3 class="table-section__title">Таблица студентов</h3>
+      <button class="modal-btn" data-path="form-popup">Добавить студента</button>
+
+      <div class="search-filter">
         <label for="search-input">Поиск Студентов:</label>
         <input type="text" id="search-input" placeholder="Поиск...">
       </div>
@@ -74,7 +38,49 @@
         </tbody>
       </table>
     </section>
-  </div>
 
+    <div class="modals">
+      <div class="modal-overlay">
+        <div class="modal" data-target="form-popup">
+          <form class="form"  id="student-form" novalidate>
+            <div>
+              <label for="name">Имя:</label>
+              <input type="text" id="name" placeholder="Введите Имя...">
+            </div>
+            <div>
+              <label for="surname">Фамилия:</label>
+              <input type="text" id="surname" placeholder="Введите Фамилию...">
+            </div>
+            <div>
+              <label for="patronymic">Отчество:</label>
+              <input type="text" id="patronymic" placeholder="Введите Отчество...">
+            </div>
+            <div>
+              <label for="birth-date">Дата Рождения:</label>
+              <input type="date" id="birth-date" placeholder="Введите Дату Рождения...">
+            </div>
+            <div>
+              <label for="year-beginning-study">Год начала обучения:</label>
+              <input type="number" id="year-start-education" placeholder="Введите Год...">
+            </div>
+            <div>
+              <label for="faculty">Факультет:</label>
+              <select name="faculty" id="faculty">
+                <option hidden disabled selected value="default">- Выберете Факультет -</option>
+                <option value="Дизайн">Дизайн</option>
+                <option value="Программирование">Программирование</option>
+                <option value="Маркетинг">Маркетинг</option>
+                <option value="Продажи">Продажи</option>
+              </select>
+            </div>
+            <div>
+              <input type="submit" value="Отправить форму">
+            </div>
+            <hr id="end">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

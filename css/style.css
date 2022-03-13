@@ -3,17 +3,11 @@ body {
   box-sizing: border-box;
   font-size: 22px;
   background: rgb(129, 118, 118, .1);
-
-}
-
-h1 {
-  margin-bottom: 50px;
-  text-align: center;
+  height: 100%;
 }
 
 .container {
   max-width: 1770px;
-  display: flex;
   margin: 0 auto;
   padding-top: 100px;
   padding-right: 58px;
@@ -48,22 +42,21 @@ h1 {
 .form {
   display: flex;
   flex-direction: column;
-  align-self: center;
   border: 2px solid black;
   border-radius: 20px;
   margin-right: 2%;
-  padding: 40px;
-  background-color: #f4f4f4;;
+  padding: 20px;
+  background-color: #f4f4f4;
 }
 
-div { padding: .6rem; }
+div { padding: .2rem; }
 
 select { width: 90%; }
 
 select:hover { cursor: pointer; }
 
-input {
-  width: 90%;
+input,
+select {
   border: none;
   border-bottom: 1px gray solid;
   width: 100%;
@@ -84,11 +77,68 @@ input {
       cursor: pointer;
     }
 
-.table-section__title {text-align: center; }
-
-.success {
-  background-color: #78ff9a;
+.table-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.table-section__title { margin-bottom: 30px; }
+
+.modal-btn {
+  border: 1px solid #36ade1;
+  border-radius: 15px;
+  padding: 10px 20px;
+  color: #36ade1  ;
+  background-color: transparent;
+}
+
+.modal-btn:hover {
+  border-color: coral;
+  color: coral;
+}
+
+.modal-overlay {
+  align-content: center;
+  justify-content: center;
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100%;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease-in-out;
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+  max-width: 500px;
+  height: 100%;
+  background-color: transparent;
+  transform: translateX(150%);
+}
+
+.modal-overlay--visible {
+	opacity: 1;
+	visibility: visible;
+	transition: all 0.3s ease-in-out;
+}
+
+.modal--visible {
+  display: flex;
+}
+
+.success { background-color: #78ff9a; }
 
 .error {
   color: white;
