@@ -144,6 +144,8 @@ class WidgetUI {
 class Form {
   static validateInput(student) {
     const widget = new WidgetUI();
+    const errorsValidate = document.querySelectorAll('.error-validate');
+    const formInputs = form.querySelectorAll("[type='text']");
 
     // Проверка на заполнение
     if(
@@ -153,10 +155,11 @@ class Form {
       student.birthDate.trim() === '' ||
       student.educationStartDate.trim() === '' ||
       student.faculty === 'default'
-      ) {
-        // Invalid! - Пустые поля
-        widget.renderAlert('Пожалуйста, заполните все поля!', 'error');
-        return false;
+      )
+      {
+        formInputs.forEach(input => input.classList.add('error-field'));
+        errorsValidate.forEach(error => error.style.display = 'block');
+        return widget.renderAlert('Пожалуйста, заполните все поля!', 'error');
       }
     return true;
   }
@@ -207,6 +210,7 @@ Form.inputCourseNumberRange();
 const modalBtn = document.querySelector('.modal-btn');
 const modalOverlay = document.querySelector('.modal-overlay');
 const modalWindow = document.querySelectorAll('.modal');
+const form = document.getElementById('student-form');
 
 modalBtn.addEventListener('click', (event) => {
   let path = event.currentTarget.getAttribute('data-path');
@@ -216,15 +220,12 @@ modalBtn.addEventListener('click', (event) => {
 });
 
 modalOverlay.addEventListener('click', (event) => {
-	console.log(event.target);
-
 	if (event.target === modalOverlay) {
 		modalOverlay.classList.remove('modal-overlay--visible');
-    modalWindow.classList.remove('modal--visible');
 	}
 });
 
-document.getElementById('student-form').addEventListener('submit', (event) => {
+form.addEventListener('submit', (event) => {
   event.preventDefault();
 
   const widget = new WidgetUI();

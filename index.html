@@ -20,8 +20,10 @@
       <button class="modal-btn" data-path="form-popup">Добавить студента</button>
 
       <div class="search-filter">
-        <label for="search-input">Поиск Студентов:</label>
-        <input type="text" id="search-input" placeholder="Поиск...">
+          <input class="search-filter__input" type="text" id="search-name" placeholder="Поиск по ФИО...">
+          <input class="search-filter__input" type="text" id="search-faculaty" placeholder="Поиск по факультету...">
+          <input class="search-filter__input" type="text" id="search-start-year" placeholder="Поиск по началу обучения...">
+          <input class="search-filter__input" type="text" id="search-end-year" placeholder="Поиск по концу обучения...">
       </div>
 
       <table class="table table-bordered table-primary">
@@ -43,28 +45,34 @@
       <div class="modal-overlay">
         <div class="modal" data-target="form-popup">
           <form class="form"  id="student-form" novalidate>
-            <div>
+            <div class="input-box">
               <label for="name">Имя:</label>
-              <input type="text" id="name" placeholder="Введите Имя...">
+              <div class="error-validate">Введите имя на русском языке</div>
+              <input type="text" id="name" placeholder="Введите Имя..." data-reg="^[А-ЯЁ][а-яё]*$">
             </div>
-            <div>
+            <div class="input-box">
               <label for="surname">Фамилия:</label>
-              <input type="text" id="surname" placeholder="Введите Фамилию...">
+              <div class="error-validate">Введите фамилию на русском языке</div>
+              <input type="text" id="surname" placeholder="Введите Фамилию..." data-reg="^[А-ЯЁ][а-яё]*$">
             </div>
-            <div>
+            <div class="input-box">
               <label for="patronymic">Отчество:</label>
-              <input type="text" id="patronymic" placeholder="Введите Отчество...">
+              <div class="error-validate">Введите отчество на русском языке</div>
+              <input type="text" id="patronymic" placeholder="Введите Отчество..." data-reg="^[А-ЯЁ][а-яё]*$">
             </div>
-            <div>
+            <div class="input-box">
               <label for="birth-date">Дата Рождения:</label>
-              <input type="date" id="birth-date" placeholder="Введите Дату Рождения...">
+              <div class="error-validate">Введите дату рождения</div>
+              <input type="date" id="birth-date" placeholder="Введите Дату Рождения..." data-reg="(0?[1-9]|[12][0-9]|3[01]).(0?[1-9]|1[012]).((19|20)\d\d)">
             </div>
-            <div>
-              <label for="year-beginning-study">Год начала обучения:</label>
-              <input type="number" id="year-start-education" placeholder="Введите Год...">
+            <div class="input-box">
+              <label for="year-start-education">Год начала обучения:</label>
+              <div class="error-validate">Введите год начала обучения </div>
+              <input type="number" id="year-start-education" placeholder="Введите Год..." data-reg="^[1-9]+[0-9]*$">
             </div>
-            <div>
+            <div class="input-box">
               <label for="faculty">Факультет:</label>
+              <div class="error-validate">Выберете Факультет</div>
               <select name="faculty" id="faculty">
                 <option hidden disabled selected value="default">- Выберете Факультет -</option>
                 <option value="Дизайн">Дизайн</option>
@@ -73,9 +81,7 @@
                 <option value="Продажи">Продажи</option>
               </select>
             </div>
-            <div>
-              <input type="submit" value="Отправить форму">
-            </div>
+              <button type="submit">Отправить форму</button>
             <hr id="end">
           </form>
         </div>
