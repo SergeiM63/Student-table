@@ -10,6 +10,9 @@ class Student {
     this.birthDate = birthDate;
     this.educationStartDate = educationStartDate;
     this.faculty = faculty;
+
+    this.age = Student.getStudentAge(this.birthDate);
+    this.course = Student.getStudentCourse(this.educationStartDate);
   }
 
   static birthDateFormat(birthDate) {
@@ -33,9 +36,9 @@ class Student {
   }
 
   static getStudentCourse(startYear) {
-    const now = new Date().toISOString().slice(0, 10).split('-');
-    const nowYear = Number(now[0]);
-    const nowMonth = Number(now[1]);
+    const now = new Date().toISOString().slice(0, 10).split('-'),
+          nowYear = Number(now[0]),
+          nowMonth = Number(now[1]);
 
     startYear = Number(startYear);
     let course = nowYear - startYear;
@@ -51,8 +54,9 @@ class Storage {
   static getStudents() {
     let students;
 
-    if (localStorage.getItem('students') === null) students = [];
-    else {
+    if (localStorage.getItem('students') === null) {
+      students = [];
+    } else {
       students = JSON.parse(localStorage.getItem('students'));
     }
 
@@ -64,9 +68,9 @@ class Storage {
     const students = Storage.getStudents();
 
     // Отобразить каждого студента в таблице
-    students.forEach((student, index) => {
+    students.forEach(student => {
       student.editting = false;
-      widget.renderStudent(student, index + 1);
+      widget.renderStudent(student);
     });
 
     localStorage.setItem('students', JSON.stringify(students));
@@ -83,16 +87,16 @@ class Storage {
 }
 
 class WidgetUI {
-  renderStudent(student, id) {
-    const table = document.getElementById('student-table');
-    const entry = document.createElement('tr');
-    const age = Student.getStudentAge(student.birthDate);
-    const course = Student.getStudentCourse(student.educationStartDate);
+  renderStudent(student) {
+    console.log(student);
+    const table = document.getElementById('student-table'),
+          entry = document.createElement('tr'),
+          age = student.age,
+          course = student.course;
 
     student.birthDate = Student.birthDateFormat(student.birthDate);
 
     entry.innerHTML = `
-      <td>${id === undefined ? 1 : id}</td>
       <td class="student-name">
       ${student.surname} ${student.name} ${student.patronymic}
       </td>
@@ -142,36 +146,38 @@ class WidgetUI {
 }
 
 class Form {
-  static validateInput(student) {
+  static checkEmptyInputs(student) {
     const widget = new WidgetUI();
-    const errorsValidate = document.querySelectorAll('.error-validate');
-    const formInputs = form.querySelectorAll("[type='text']");
 
     // Проверка на заполнение
-    if(
-      student.name.trim() === '' ||
-      student.surname.trim() === '' ||
-      student.patronymic.trim() === '' ||
-      student.birthDate.trim() === '' ||
-      student.educationStartDate.trim() === '' ||
-      student.faculty === 'default'
-      )
+    formInputBoxes.forEach(inputBox => {
+      const input = inputBox.querySelector('.input-box__input');
+      const error = inputBox.querySelector('.error-validate');
+
+      if(input.value.trim() === '') {
+        input.classList.add('error-field');
+        error.style.display = 'block';
+      };
+    });
+
+    if(student.faculty === 'default')
       {
-        formInputs.forEach(input => input.classList.add('error-field'));
-        errorsValidate.forEach(error => error.style.display = 'block');
+        formSelect.classList.add('error-field');
         return widget.renderAlert('Пожалуйста, заполните все поля!', 'error');
       }
     return true;
   }
 
   static validateInputDate(date) {
+    console.log(date, typeof date);
+
     // if date < 1900 && date > new Date()
     // renderAlert()
 
     // console.log(date);
     // const inputBirthDate = document.getElementById('birth-date');
     // console.log(inputBirthDate.valueAsDate);
-    return true
+    return true;
   }
 
   static inputDateRange(minValue = '1900-01-01', maxValue) {
@@ -189,7 +195,7 @@ class Form {
     inputBirthDate.setAttribute('max', maxValue);
   }
 
-  static inputCourseNumberRange(minValue = '2020', maxValue) {
+  static inputCourseNumberRange(minValue = '2000', maxValue) {
     const inputCourseNumber = document.getElementById('year-start-education');
 
     if (maxValue === undefined) {
@@ -207,10 +213,12 @@ document.addEventListener('DOMContentLoaded', Storage.printStudents);
 Form.inputDateRange();
 Form.inputCourseNumberRange();
 
-const modalBtn = document.querySelector('.modal-btn');
-const modalOverlay = document.querySelector('.modal-overlay');
-const modalWindow = document.querySelectorAll('.modal');
-const form = document.getElementById('student-form');
+const modalBtn = document.querySelector('.modal-btn'),
+      modalOverlay = document.querySelector('.modal-overlay'),
+      modalWindow = document.querySelector('.modal'),
+      form = document.getElementById('student-form'),
+      formInputBoxes = document.querySelectorAll('.input-box'),
+      formSelect = document.querySelector('.input-box__select');
 
 modalBtn.addEventListener('click', (event) => {
   let path = event.currentTarget.getAttribute('data-path');
@@ -223,6 +231,29 @@ modalOverlay.addEventListener('click', (event) => {
 	if (event.target === modalOverlay) {
 		modalOverlay.classList.remove('modal-overlay--visible');
 	}
+});
+
+formInputBoxes.forEach(inputBox => {
+  const input = inputBox.querySelector('.input-box__input');
+  console.log(input);
+  if (!input.dataset.reg) return;
+
+  const inputValue = input.value,
+        inputReg = input.dataset.reg,
+        reg = new RegExp(inputReg);
+
+  input.addEventListener('input', () => {
+    console.log(input.dataset);
+
+    if (reg.test(inputValue)) {
+      input.dataset.isValid = 1;
+      input.classList.add('success-field');
+    } else {
+      input.setAttribute('isValid', '0');
+      input.classList.add('error-field');
+      input.style.display ='block';
+    }
+  })
 });
 
 form.addEventListener('submit', (event) => {
@@ -238,17 +269,28 @@ form.addEventListener('submit', (event) => {
         faculty = document.getElementById('faculty');
 
   const student = new Student(
-    surname.value, name.value, patronymic.value,
-    birthDate.value, educationStartDate.value,
+    surname.value.trim(),
+    name.value.trim(),
+    patronymic.value.trim(),
+    birthDate.value,
+    educationStartDate.value.trim(),
     faculty.value
   );
 
   // Валидация input
-  if (Form.validateInput(student) && Form.validateInputDate(birthDate.value)) {
+  if (
+    Form.checkEmptyInputs(student) &&
+    Form.validateInputDate(birthDate.value)
+  )
+  {
     Storage.pushStudent(student);
-
     widget.renderStudent(student);
     widget.clearInputFields();
     widget.renderAlert('Студент Добавлен', 'success');
+
+    setTimeout(() => {
+      modalWindow.classList.remove('modal--visible');
+      modalOverlay.classList.remove('modal-overlay--visible');
+    }, 2000);
   }
 });

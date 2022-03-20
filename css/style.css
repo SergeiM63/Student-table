@@ -107,6 +107,11 @@ input:hover,
   box-shadow: 0 0 5px coral;
 }
 
+.success-field {
+  background-color: #78ff9a;
+  box-shadow: 0 0 5px #78ff9a;
+}
+
 .table-section {
   display: flex;
   flex-direction: column;
@@ -120,7 +125,7 @@ input:hover,
   margin-bottom: 20px;
   border-radius: 15px;
   padding: 10px 20px;
-  color: #36ade1  ;
+  color: #36ade1;
   background-color: transparent;
   transition: border-color .3s ease-in-out,
               color .3s ease-in-out,
@@ -128,9 +133,9 @@ input:hover,
 }
 
 .modal-btn:hover {
-  border-color: coral;
-  color: coral;
-  box-shadow: 0 0 5px coral;
+  border-color: blue;
+  color: blue;
+  box-shadow: 0 0 5px blue;
 }
 
 .search-filter {
@@ -160,6 +165,12 @@ input:hover,
 	transition: all 0.3s ease-in-out;
 }
 
+.modal-overlay--visible {
+	opacity: 1;
+	visibility: visible;
+	transition: all 0.3s ease-in-out;
+}
+
 .modal {
   display: flex;
   align-items: center;
@@ -171,17 +182,16 @@ input:hover,
   transform: translateX(150%);
 }
 
-.modal-overlay--visible {
-	opacity: 1;
-	visibility: visible;
-	transition: all 0.3s ease-in-out;
-}
-
 .modal--visible { display: flex; }
 
-.success { background-color: #78ff9a; }
+.success {
+  font-weight: 600;
+  text-align: center;
+  background-color: #78ff9a;
+}
 
 .error {
-  color: white;
+  font-weight: 600;
+  text-align: center;
   background-color: lightcoral;
 }
