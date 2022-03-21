@@ -108,6 +108,7 @@ input:hover,
 }
 
 .success-field {
+  color: #000;
   background-color: #78ff9a;
   box-shadow: 0 0 5px #78ff9a;
 }

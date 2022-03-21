@@ -88,7 +88,6 @@ class Storage {
 
 class WidgetUI {
   renderStudent(student) {
-    console.log(student);
     const table = document.getElementById('student-table'),
           entry = document.createElement('tr'),
           age = student.age,
@@ -98,9 +97,9 @@ class WidgetUI {
 
     entry.innerHTML = `
       <td class="student-name">
-      ${student.surname} ${student.name} ${student.patronymic}
+        ${student.surname} ${student.name} ${student.patronymic}
       </td>
-      <td>${student.faculty}</td>
+      <td class="">${student.faculty}</td>
       <td>${student.birthDate} (${age})</td>
       <td>${student.educationStartDate}-${Number(student.educationStartDate) + 4} (${course} курс)</td>
     `;
@@ -163,9 +162,30 @@ class Form {
     if(student.faculty === 'default')
       {
         formSelect.classList.add('error-field');
+        errorSelect.style.display = 'block';
         return widget.renderAlert('Пожалуйста, заполните все поля!', 'error');
+      } else {
+        formSelect.classList.remove('error-field');
+        errorSelect.style.display = 'none';
       }
     return true;
+  }
+
+  static checkValidateInputs() {
+    const allValid = [];
+
+    formInputBoxes.forEach(inputBox => {
+      const input = inputBox.querySelector('.input-box__input');
+      const isValid = Number(input.dataset.isValid);
+      typeof isValid;
+      allValid.push(isValid);
+    });
+
+    const isAllValid = allValid.reduce((acc, current) => {
+        return acc && current;
+      });
+      
+    if ( Boolean(isAllValid) ) return true;
   }
 
   static validateInputDate(date) {
@@ -218,12 +238,15 @@ const modalBtn = document.querySelector('.modal-btn'),
       modalWindow = document.querySelector('.modal'),
       form = document.getElementById('student-form'),
       formInputBoxes = document.querySelectorAll('.input-box'),
-      formSelect = document.querySelector('.input-box__select');
+      formSelectBox = document.querySelector('.select-box'),
+      formSelect = formSelectBox.querySelector('.input-box__select');
+      errorSelect = formSelectBox.querySelector('.error-validate');
 
 modalBtn.addEventListener('click', (event) => {
-  let path = event.currentTarget.getAttribute('data-path');
+  const path = event.currentTarget.getAttribute('data-path');
+  const target = document.querySelector(`[data-target="${path}"]`);
 
-	document.querySelector(`[data-target="${path}"]`).classList.add('modal--visible');
+	target.classList.add('modal--visible');
 	modalOverlay.classList.add('modal-overlay--visible');
 });
 
@@ -235,25 +258,28 @@ modalOverlay.addEventListener('click', (event) => {
 
 formInputBoxes.forEach(inputBox => {
   const input = inputBox.querySelector('.input-box__input');
-  console.log(input);
+  const errorText = inputBox.querySelector('.error-validate');
+  input.dataset.isValid = 0;
+
   if (!input.dataset.reg) return;
 
-  const inputValue = input.value,
-        inputReg = input.dataset.reg,
-        reg = new RegExp(inputReg);
+  let inputValue;
+  const inputReg = input.dataset.reg;
+  const reg = new RegExp(inputReg);
 
   input.addEventListener('input', () => {
-    console.log(input.dataset);
+    inputValue = input.value;
 
     if (reg.test(inputValue)) {
       input.dataset.isValid = 1;
       input.classList.add('success-field');
+      errorText.style.display = 'none';
     } else {
-      input.setAttribute('isValid', '0');
+      input.dataset.isValid = 0;
       input.classList.add('error-field');
-      input.style.display ='block';
+      errorText.style.display ='block';
     }
-  })
+  });
 });
 
 form.addEventListener('submit', (event) => {
@@ -280,6 +306,7 @@ form.addEventListener('submit', (event) => {
   // Валидация input
   if (
     Form.checkEmptyInputs(student) &&
+    Form.checkValidateInputs() &&
     Form.validateInputDate(birthDate.value)
   )
   {
