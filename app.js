@@ -4,9 +4,9 @@ class Student {
     educationStartDate, faculty
   )
   {
-    this.surname = surname;
-    this.name = name;
-    this.patronymic = patronymic;
+    this.surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+    this.name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+    this.patronymic = patronymic.substring(0, 1).toUpperCase() + patronymic.substring(1).toLowerCase();
     this.birthDate = birthDate;
     this.educationStartDate = educationStartDate;
     this.faculty = faculty;
@@ -87,8 +87,34 @@ class Storage {
 }
 
 class WidgetUI {
+  searchInput(elasticItems, value) {
+    // if(value === '') {
+    //   elasticItems.forEach(item => {
+    //     item.parentElement.style.display = 'block';
+    //     item.textContent = item.textContent;
+    //   });
+    // }
+
+    // else {
+    //   elasticItems.forEach(item => {
+    //     if(item.textContent.search(value) === -1) {
+    //       item.parentElement.style.display = 'none';
+    //       item.textContent = item.textContent;
+    //     } else {
+    //       item.parentElement.style.display = 'block';
+
+    //       let string = item.textContent;
+    //       let position = item.textContent.search(value);
+    //       let length = value.length;
+
+    //       return item.innerHTML = string.slice(0, position)+'<mark>'+string.slice(position, position + length)+'</mark>'+string.slice(position + length);
+    //     }
+    //   });
+    // }
+  }
+
   renderStudent(student) {
-    const table = document.getElementById('student-table'),
+    const tableBody = document.getElementById('student-table-body'),
           entry = document.createElement('tr'),
           age = student.age,
           course = student.course;
@@ -96,15 +122,17 @@ class WidgetUI {
     student.birthDate = Student.birthDateFormat(student.birthDate);
 
     entry.innerHTML = `
-      <td class="student-name">
+      <td class="student-name" data-target="search-name">
         ${student.surname} ${student.name} ${student.patronymic}
       </td>
-      <td class="">${student.faculty}</td>
-      <td>${student.birthDate} (${age})</td>
-      <td>${student.educationStartDate}-${Number(student.educationStartDate) + 4} (${course} курс)</td>
+      <td class="faculty" data-target="search-faculaty">${student.faculty}</td>
+      <td class="age">${student.birthDate} (${age})</td>
+      <td class="educationStart">
+        <span data-target="search-start">${student.educationStartDate}</span> - <span data-target="search-end">${Number(student.educationStartDate) + 4}</span> (${course} курс)
+      </td>
     `;
 
-    table.appendChild(entry);
+    tableBody.appendChild(entry);
   }
 
   renderAlert(alert, alertType) {
@@ -177,27 +205,35 @@ class Form {
     formInputBoxes.forEach(inputBox => {
       const input = inputBox.querySelector('.input-box__input');
       const isValid = Number(input.dataset.isValid);
-      typeof isValid;
+
       allValid.push(isValid);
     });
 
     const isAllValid = allValid.reduce((acc, current) => {
         return acc && current;
       });
-      
+
     if ( Boolean(isAllValid) ) return true;
   }
 
   static validateInputDate(date) {
-    console.log(date, typeof date);
+    const inputBirthDate = document.getElementById('birth-date');
+    const errorText = inputBirthDate.previousElementSibling;
 
-    // if date < 1900 && date > new Date()
-    // renderAlert()
+    const year = date.split('-')[0];
+    const now = new Date().getFullYear();
 
-    // console.log(date);
-    // const inputBirthDate = document.getElementById('birth-date');
-    // console.log(inputBirthDate.valueAsDate);
-    return true;
+    if (year >= 1900 && year <= now) {
+      inputBirthDate.classList.remove('error-field');
+      inputBirthDate.classList.add('success-field');
+      errorText.style.display ='none';
+      return true;
+    } else  {
+      inputBirthDate.classList.remove('success-field');
+      inputBirthDate.classList.add('error-field');
+      errorText.textContent = 'Введите дату с 1900 года по н.в.';
+      errorText.style.display ='block';
+    }
   }
 
   static inputDateRange(minValue = '1900-01-01', maxValue) {
@@ -236,11 +272,14 @@ Form.inputCourseNumberRange();
 const modalBtn = document.querySelector('.modal-btn'),
       modalOverlay = document.querySelector('.modal-overlay'),
       modalWindow = document.querySelector('.modal'),
+      searchTextInputs = document.querySelectorAll(`.search-filter__input[type='text']`),
+      searchNumberInputs = document.querySelectorAll(`.search-filter__input[type='number']`),
       form = document.getElementById('student-form'),
-      formInputBoxes = document.querySelectorAll('.input-box'),
-      formSelectBox = document.querySelector('.select-box'),
-      formSelect = formSelectBox.querySelector('.input-box__select');
-      errorSelect = formSelectBox.querySelector('.error-validate');
+      formInputBoxes = form.querySelectorAll('.input-box'),
+      formSelectBox = form.querySelector('.select-box'),
+      formSelect = formSelectBox.querySelector('.input-box__select'),
+      errorSelect = formSelectBox.querySelector('.error-validate'),
+      table = document.querySelector('.table');
 
 modalBtn.addEventListener('click', (event) => {
   const path = event.currentTarget.getAttribute('data-path');
@@ -278,6 +317,80 @@ formInputBoxes.forEach(inputBox => {
       input.dataset.isValid = 0;
       input.classList.add('error-field');
       errorText.style.display ='block';
+    }
+  });
+});
+
+searchNumberInputs.forEach(searchInput => {
+  let path = searchInput.dataset.search;
+
+  searchInput.addEventListener('input', (event) => {
+    let elasticItems = document.querySelectorAll(`[data-target="${path}"]`);
+    let value = event.target.value;
+
+    // WidgetUI.searchInput(elasticItems, value);
+
+    if(value === '') {
+      elasticItems.forEach(item => {
+        item.parentElement.parentElement.style.display = 'block';
+        item.textContent = item.textContent;
+      });
+    }
+
+    else {
+      elasticItems.forEach(item => {
+        if(item.textContent.search(value) === -1) {
+          item.parentElement.parentElement.style.display = 'none';
+          item.textContent = item.textContent;
+        } else {
+          item.parentElement.parentElement.style.display = 'block';
+
+          let string = item.textContent;
+          let position = item.textContent.search(value);
+          let length = value.length;
+
+          return item.innerHTML = string.slice(0, position)+'<mark>'+string.slice(position, position + length)+'</mark>'+string.slice(position + length);
+        }
+      });
+    }
+  });
+});
+
+searchTextInputs.forEach(searchInput => {
+  let path = searchInput.dataset.search;
+
+  searchInput.addEventListener('keydown', (event) => {
+    if( event.key.match(/[0-9]/) ) return event.preventDefault();
+  });
+
+  searchInput.addEventListener('input', (event) => {
+    event.target.value.replace(/[0-9]/g, "");
+
+    let elasticItems = document.querySelectorAll(`[data-target="${path}"]`);
+    let value = event.target.value;
+
+    if(value === '') {
+      elasticItems.forEach(item => {
+        item.parentElement.style.display = 'block';
+        item.textContent = item.textContent;
+      });
+    }
+
+    else {
+      elasticItems.forEach(item => {
+        if(item.textContent.search(value) === -1) {
+          item.parentElement.style.display = 'none';
+          item.textContent = item.textContent;
+        } else {
+          item.parentElement.style.display = 'block';
+
+          let string = item.textContent;
+          let position = item.textContent.search(value);
+          let length = value.length;
+
+          item.innerHTML = string.slice(0, position)+'<mark>'+string.slice(position, position + length)+'</mark>'+string.slice(position + length);
+        }
+      });
     }
   });
 });

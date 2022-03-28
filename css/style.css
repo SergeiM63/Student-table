@@ -107,7 +107,8 @@ input:hover,
   box-shadow: 0 0 5px coral;
 }
 
-.success-field {
+.success-field,
+mark {
   color: #000;
   background-color: #78ff9a;
   box-shadow: 0 0 5px #78ff9a;
@@ -120,6 +121,13 @@ input:hover,
 }
 
 .table-section__title { margin-bottom: 30px; }
+
+.table__header {
+  transition: background-color .3s ease-in-out;
+  cursor: pointer;
+}
+
+.table__header:hover { background-color: rgba(120, 255, 154, .6); }
 
 .modal-btn {
   border: 1px solid #36ade1;

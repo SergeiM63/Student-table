@@ -19,22 +19,22 @@
       <button class="modal-btn" data-path="form-popup">Добавить студента</button>
 
       <div class="search-filter">
-          <input class="search-filter__input" type="text" id="search-name" placeholder="Поиск по ФИО...">
-          <input class="search-filter__input" type="text" id="search-faculaty" placeholder="Поиск по факультету...">
-          <input class="search-filter__input" type="number" id="search-start-year" placeholder="Поиск по началу обучения...">
-          <input class="search-filter__input" type="number" id="search-end-year" placeholder="Поиск по концу обучения...">
+        <input class="search-filter__input" type="text" data-search="search-name" placeholder="Поиск по ФИО...">
+        <input class="search-filter__input" type="text" data-search="search-faculaty" placeholder="Поиск по факультету...">
+        <input class="search-filter__input" type="number" data-search="search-start" placeholder="Поиск по началу обучения...">
+        <input class="search-filter__input" type="number" data-search="search-end" placeholder="Поиск по концу обучения...">
       </div>
 
       <table class="table table-bordered table-primary">
         <thead style="background-color: #36ade1;">
           <tr>
-            <th scope="col">ФИО студента</th>
-            <th scope="col">Факультет</th>
-            <th scope="col">Дата рождения и возраст</th>
-            <th scope="col">Годы обучения и курс</th>
+            <th class="table__header" scope="col">ФИО студента</th>
+            <th class="table__header" scope="col">Факультет</th>
+            <th class="table__header" scope="col">Дата рождения и возраст</th>
+            <th class="table__header" scope="col">Годы обучения и курс</th>
           </tr>
         </thead>
-        <tbody id="student-table"></tbody>
+        <tbody id="student-table-body"></tbody>
       </table>
     </section>
 
@@ -44,17 +44,17 @@
           <form class="form"  id="student-form" action="#" novalidate>
             <div class="input-box">
               <label for="name">Имя:</label>
-              <div class="error-validate">Введите имя</div>
+              <div class="error-validate">Введите имя без пробелов</div>
               <input class="input-box__input" type="text" id="name" placeholder="Введите Имя..." data-reg="^[а-яА-ЯёЁa-zA-Z0-9]+$">
             </div>
             <div class="input-box">
               <label for="surname">Фамилия:</label>
-              <div class="error-validate">Введите фамилию</div>
+              <div class="error-validate">Введите фамилию без пробелов</div>
               <input class="input-box__input" type="text" id="surname" placeholder="Введите Фамилию..." data-reg="^[а-яА-ЯёЁa-zA-Z0-9]+$">
             </div>
             <div class="input-box">
               <label for="patronymic">Отчество:</label>
-              <div class="error-validate">Введите отчество</div>
+              <div class="error-validate">Введите отчество без пробелов</div>
               <input class="input-box__input" type="text" id="patronymic" placeholder="Введите Отчество..." data-reg="^[а-яА-ЯёЁa-zA-Z0-9]+$">
             </div>
             <div class="input-box">
@@ -65,7 +65,7 @@
             <div class="input-box">
               <label for="year-start-education">Год начала обучения:</label>
               <div class="error-validate">Введите год начиная с 2000 </div>
-              <input class="input-box__input" type="number" id="year-start-education" placeholder="Введите Год..." data-reg="^20+[0-2]+[0-9]*$">
+              <input class="input-box__input" type="number" id="year-start-education" placeholder="Введите Год..." data-reg="^20+[0-2]+[0-9]$">
             </div>
             <div class="select-box">
               <label for="faculty">Факультет:</label>
@@ -75,7 +75,7 @@
                 <option value="Дизайн">Дизайн</option>
                 <option value="Программирование">Программирование</option>
                 <option value="Маркетинг">Маркетинг</option>
-                <option value="Продажи">Продажи</option>
+                <option value="Продажи">Управление</option>
               </select>
             </div>
               <button type="submit">Добавить студента</button>
