@@ -107,8 +107,8 @@ input:hover,
   box-shadow: 0 0 5px coral;
 }
 
-.success-field,
-mark {
+mark,
+.success-field {
   color: #000;
   background-color: #78ff9a;
   box-shadow: 0 0 5px #78ff9a;
@@ -123,6 +123,10 @@ mark {
 .table-section__title { margin-bottom: 30px; }
 
 .table__header {
+  background-image: url('../arrow.svg');
+  background-size: 25px;
+  background-repeat: no-repeat;
+  background-position: 95% center;
   transition: background-color .3s ease-in-out;
   cursor: pointer;
 }
