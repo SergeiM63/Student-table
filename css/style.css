@@ -123,15 +123,17 @@ mark,
 .table-section__title { margin-bottom: 30px; }
 
 .table__header {
-  background-image: url('../arrow.svg');
-  background-size: 25px;
-  background-repeat: no-repeat;
-  background-position: 95% center;
+  position: relative;
   transition: background-color .3s ease-in-out;
   cursor: pointer;
 }
 
 .table__header:hover { background-color: rgba(120, 255, 154, .6); }
+
+.arrow {
+  position: absolute;
+  right: 20px;
+}
 
 .modal-btn {
   border: 1px solid #36ade1;

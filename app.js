@@ -157,43 +157,91 @@ class WidgetUI {
       typesItem.push(type);
     });
 
-    //Получаем тип сортируемых элементов
+    // Получаем тип сортируемых элементов
     const set = new Set(typesItem);
+
+    // Сортировка по возрастанию
+    const ascendingSort = array => {
+      return array.forEach(item => {
+        const parent = item.parentElement;
+        tableBody.append(parent);
+        sorted = !sorted;
+      });
+    }
+
+    // Сортировка по убыванию
+    const descendingSort = array => {
+      return array.forEach(item => {
+        const parent = item.parentElement;
+        tableBody.prepend(parent);
+        sorted = !sorted;
+      });
+    }
 
     // Сортирует для type="text"
     if(set.size === 1 && set.has('text')) {
-      console.log('This is TEXT type');
-      sortItems.forEach(item => {
-        console.log(item.textContent.trim()[0])
-        console.log(item.parentElement);
+      const sortedItems = [...sortItems].sort((a, b) => {
+        if(a.textContent.trim() === b.textContent.trim()) return 0;
+        if(a.textContent.trim() < b.textContent.trim()) return -1;
+        if(a.textContent.trim() > b.textContent.trim()) return 1;
       });
+
+      sorted === false ? ascendingSort(sortedItems) : descendingSort(sortedItems);
+
+      return tableBody;
     }
 
     // Сортирует для type="date"
     if(set.size === 1 && set.has('date')) {
-      console.log('This is DATE type');
+      const birthDateFormat = birthDate => {
+        birthDate = birthDate.split(' ').slice(0, 1)[0].split('.').reverse().join('-');
+        return Date.parse(birthDate);
+      }
 
-      const dateArray = [...sortItems].map(item => {
-        const birthDate = item.textContent.split(' ').slice(0, 1)[0];
-        const birthDateReformat = birthDate.split('.').reverse().join('-');
-        return (Date.parse(birthDateReformat));
+      const sortedItems = [...sortItems].sort((a, b) => {
+        a = birthDateFormat(a.textContent);
+        b = birthDateFormat(b.textContent);
+
+        if(a === b) return 0;
+        if(a < b) return -1;
+        if(a > b) return 1;
       });
 
-      let sortedArray = dateArray.sort((a, b) => a - b);
-      sortedArray = sortedArray.map(item => item = new Date(item).toISOString().slice(0, 10));
-      console.log(sortedArray);
+      sorted === false ? ascendingSort(sortedItems) : descendingSort(sortedItems);
     }
 
     // Сортирует для type="number"
     if(set.size === 1 && set.has('number')) {
-      console.log('This is NUMBER type');
-      sortItems.forEach(item => {
-        console.log(item.textContent);
-        console.log(item.parentElement.parentElement);
+      const sortedItems = [...sortItems].sort((a, b) => {
+        a = a.textContent;
+        b = b.textContent;
+
+        if(a === b) return 0;
+        if(a < b) return -1;
+        if(a > b) return 1;
       });
 
-      sortItems = Array.from(sortItems);
-      console.log(sortItems);
+      // Сортировка по возрастанию
+      const ascendingSort = array => {
+        return array.forEach(item => {
+          const parent = item.parentElement.parentElement;
+          tableBody.append(parent);
+          sorted = !sorted;
+        });
+      }
+
+      // Сортировка по убыванию
+      const descendingSort = array => {
+        return array.forEach(item => {
+          const parent = item.parentElement.parentElement;
+          tableBody.prepend(parent);
+          sorted = !sorted;
+        });
+      }
+
+      sorted === false ? ascendingSort(sortedItems) : descendingSort(sortedItems);
+
+      return tableBody;
     }
 
     return tableBody;
@@ -368,6 +416,8 @@ const modalBtn = document.querySelector('.modal-btn'),
       table = document.querySelector('.table'),
       tableHeaders = table.querySelectorAll('.table__header');
 
+let sorted = false;
+
 modalBtn.addEventListener('click', (event) => {
   const path = event.currentTarget.getAttribute('data-path');
   const target = document.querySelector(`[data-target="${path}"]`);
@@ -438,11 +488,27 @@ searchNumberInputs.forEach(searchInput => {
   });
 });
 
+
 tableHeaders.forEach(header => {
   const path = header.dataset.sort;
   const widget = new WidgetUI;
 
+  const arrowUp = header.querySelector('.arrow-up');
+  const arrowDown = header.querySelector('.arrow-down');
+
   header.addEventListener('click', () => {
+    const arrowsAll = document.querySelectorAll('.arrow');
+
+    arrowsAll.forEach(arrow => arrow.style.stroke = 'black');
+
+    if(sorted === true) {
+      arrowDown.style.stroke = "gold";
+      arrowUp.style.stroke = "black";
+    } else {
+      arrowDown.style.stroke = "black";
+      arrowUp.style.stroke = "gold";
+    }
+
     const sortItems = table.querySelectorAll(`[data-target="${path}"]`);
     widget.tableSortItems(sortItems);
   });
